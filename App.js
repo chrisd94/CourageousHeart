@@ -5,11 +5,11 @@ export default function App() {
   return (
     <View style={styles.container_top}>
       <View style={styles.container_pink}>
-        <Text>Open up App.js start to working on your app!</Text>
+        <Text>There is the profil picture</Text>
         <StatusBar style="auto" />
       </View>
       <View style={styles.container_white}>
-        <Text>Open up App.js start to working on your app!</Text>
+        <Text>There is the rest</Text>
         <StatusBar style="auto" />
       </View>
     </View>
