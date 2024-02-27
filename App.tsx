@@ -1,22 +1,47 @@
 import { NavigationContainer } from "@react-navigation/native";
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import AppNavigator from './navigation/AppNavigator';
+import TabNavigator from './navigation/TabNavigator';
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import LoginScreen from "./screens/LoginScreen";
+import LandingScreen from "./screens/LandingScreen";
+import SignUpScreen from "./screens/SignUpScreen";
+import { StatusBar } from "expo-status-bar";
+import { SafeAreaView, StyleSheet } from "react-native";
+import i18next from "i18next";
+import * as Localization from "expo-localization";
+
+type RootStackParamList = {
+  Landing: undefined;
+  Home: undefined;
+  Login: undefined;
+  SignUp: undefined;
+  TabNavigator: undefined
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
+
+i18next.changeLanguage(Localization.getLocales()[0].languageCode!)
 
 
 export default function App() {
   return (
-    <NavigationContainer>
-      <AppNavigator />
-    </NavigationContainer>
+    <SafeAreaView style={styles.safeContainer}>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Landing" screenOptions={{ headerShown: false, animation: 'none'}}>
+          <Stack.Screen name="Landing" component={LandingScreen} />
+          <Stack.Screen name="Login" component={LoginScreen}/>
+          <Stack.Screen name="SignUp" component={SignUpScreen} />
+          <Stack.Screen name="TabNavigator" component={TabNavigator} />
+        </Stack.Navigator>
+        <StatusBar hidden={true}/>
+      </NavigationContainer>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#ECDEEA',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+      safeContainer: {
+        flex: 1,
+        backgroundColor: 'white'
+      }
+})

@@ -11,7 +11,7 @@ import { BottomTabBarButtonProps } from '@react-navigation/bottom-tabs';
 const Tab = createBottomTabNavigator();
 
 //Bottom Navigation Bar
-const AppNavigator: React.FC = () => {
+const TabNavigator: React.FC = () => {
     return(
         <Tab.Navigator 
             screenOptions={({ route }) => ({
@@ -26,7 +26,6 @@ const AppNavigator: React.FC = () => {
                     alignItems: 'center',
                 },
                 tabBarIcon: ({ focused }) => {
-                    let iconName: string = '../assets/icons/home_solid.png';
 
                     if (route.name === 'Home') {
                         if (focused) {
@@ -89,7 +88,7 @@ interface TabBarButtonProps extends BottomTabBarButtonProps {
 const TabButton: React.FC<TabBarButtonProps> = ({children, onPress, label}) => {
     return <TouchableOpacity
         onPress={onPress}
-        activeOpacity={100}
+        activeOpacity={1}
         style={{
             margin: 3.5,
             justifyContent: 'center',
@@ -108,4 +107,4 @@ const TabButton: React.FC<TabBarButtonProps> = ({children, onPress, label}) => {
     </TouchableOpacity>;
 }
 
-export default AppNavigator
+export default TabNavigator
