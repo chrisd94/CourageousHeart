@@ -66,9 +66,9 @@ const SignUpScreen: React.FC = () => {
         setMailError(i18next.t('sign_up_mail_error_invalid'))
     }
 
-    if (pw.trim().length == 0) {
+    if (pw.trim().length <= 5) {
         valid = false;
-        setPwError(i18next.t('sign_up_pw_error_empty'))
+        setPwError(i18next.t('sign_up_pw_error_characters'))
     }
 
     if (pw !== pwRepeat) {
@@ -92,7 +92,10 @@ const SignUpScreen: React.FC = () => {
                 <Text style={styles.title}>{i18next.t('sign_up_title').toUpperCase()}</Text>
                 <Input placeholder={i18next.t('name')} error={nameError} onChange={onChangeName} setError={setNameError} value={name} password={false} />
                 <View style={styles.container_input}>
-                    <TouchableOpacity activeOpacity={1} onPress={showDatepicker} style={[styles.datePicker, {borderColor: dobError.length !== 0 ? 'red' : 'black', borderWidth: dobError.length !== 0 ? 2 : 1}]}>
+                    <TouchableOpacity 
+                    activeOpacity={1} 
+                    onPress={showDatepicker} 
+                    style={[styles.datePicker, {borderColor: dobError.length !== 0 ? 'red' : 'black', borderWidth: dobError.length !== 0 ? 2 : 1}]}>
                     {initial ? (
                         <Text style={{ color: 'gray' }}>{i18next.t('dob')}</Text>
                         ) : (
