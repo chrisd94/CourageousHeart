@@ -9,6 +9,8 @@ interface InputProps {
     password: boolean,
     error: string,
     setError: React.Dispatch<React.SetStateAction<string>>,
+    email: boolean
+    handleInputChange: () => void
 }
 
 const Input: React.FC<InputProps> = ({
@@ -17,10 +19,13 @@ const Input: React.FC<InputProps> = ({
   value,
   password,
   error,
-  setError
+  setError,
+  email,
+  handleInputChange
 }) => {
   const [hidePassword, setHidePassword] = useState(password);
   const [isFocused, setIsFocused] = useState(false);
+
 
   const togglePassword = () => {
     setHidePassword(!hidePassword)
@@ -49,7 +54,9 @@ const Input: React.FC<InputProps> = ({
         ]}>
         <TextInput
           placeholder={placeholder}
+          keyboardType={email ? 'email-address' : 'default'}
           onChangeText={onChange}
+          onChange={handleInputChange}
           value={value}
           placeholderTextColor={'grey'}
           onFocus={() => {
@@ -85,7 +92,6 @@ const Input: React.FC<InputProps> = ({
 
 const style = StyleSheet.create({
   inputContainer: {
-    alignSelf: 'center',
     height: 48,
     backgroundColor: 'white',
     flexDirection: 'row',

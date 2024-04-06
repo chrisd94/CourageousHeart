@@ -4,6 +4,7 @@ import { useState } from "react"
 import { useNavigation } from "@react-navigation/native"
 import i18next from "i18next"
 import Input from "../components/Input"
+import { FIREBASE_APP, FIREBASE_AUTH } from "../FirebaseConfig";
 
 const LoginScreen: React.FC = () => {
 
@@ -13,6 +14,7 @@ const LoginScreen: React.FC = () => {
   const [pwRepeatError, setPwRepeatError] = useState('');
 
   const navigation = useNavigation();
+  const auth = FIREBASE_AUTH;
 
     return(
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{backgroundColor: 'white', alignItems: 'center'}}>
@@ -21,14 +23,14 @@ const LoginScreen: React.FC = () => {
           <Image source={require('../assets/images/sign_up_3.png')} resizeMode='contain' style={styles.image} />
           <Text style={styles.title}>{i18next.t('login').toUpperCase()}</Text>
           <View style={styles.container_form}>
-            <Input error='' placeholder={i18next.t('email')} onChange={onChangeEmail} setError={setPwError} value={email} password={false} />
-            <Input error='' placeholder={i18next.t('password')} onChange={onChangePw} setError={setPwRepeatError} value={pw} password={true} />
+            <Input email={true} handleInputChange={() => {}} error='' placeholder={i18next.t('email')} onChange={onChangeEmail} setError={setPwError} value={email} password={false} />
+            <Input email={false} handleInputChange={() => {}} error='' placeholder={i18next.t('password')} onChange={onChangePw} setError={setPwRepeatError} value={pw} password={true} />
             <TouchableOpacity activeOpacity={0.8} style={styles.button_login} onPress={() => {navigation.navigate('TabNavigator')}}>
               <Text style={{fontSize: 15, color: 'white', fontWeight: 'bold'}} >{i18next.t('login').toUpperCase()}</Text>
             </TouchableOpacity>
           </View>
-          <View style={{flex: 1, justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', alignSelf: 'center', marginTop: 20}}>
-            <Text>{i18next.t('no_account_yet')}</Text>
+          <View style={{flex: 1, justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', alignSelf: 'center'}}>
+            <Text>{i18next.t('no_account')}</Text>
             <Text style={{fontWeight: 'bold', marginLeft: 10}} onPress={() => {navigation.navigate('SignUp')}}>{i18next.t('sign_up')}</Text>
           </View>
         </View>

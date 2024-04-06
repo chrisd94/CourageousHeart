@@ -8,6 +8,7 @@ import { StatusBar } from "expo-status-bar";
 import { SafeAreaView, StyleSheet } from "react-native";
 import i18next from "i18next";
 import * as Localization from "expo-localization";
+import ProfilDataScreen from "./screens/registration/ProfilDataScreen";
 
 type RootStackParamList = {
   Landing: undefined;
@@ -30,7 +31,7 @@ export default function App() {
         <Stack.Navigator initialRouteName="Landing" screenOptions={{ headerShown: false, animation: 'none'}}>
           <Stack.Screen name="Landing" component={LandingScreen} />
           <Stack.Screen name="Login" component={LoginScreen}/>
-          <Stack.Screen name="SignUp" component={SignUpScreen} />
+          <Stack.Screen name="SignUp" component={ProfilDataScreen} />
           <Stack.Screen name="TabNavigator" component={TabNavigator} />
         </Stack.Navigator>
         <StatusBar hidden={true}/>

@@ -1,14 +1,19 @@
-import { View, Text, StyleSheet, Image, KeyboardAvoidingView, TouchableOpacity, Platform, Modal, ScrollView, Dimensions} from 'react-native'
+import { View, Text, StyleSheet, Image, KeyboardAvoidingView, TouchableOpacity, Platform, Modal, ScrollView, Dimensions, ActivityIndicator} from 'react-native'
 import React from 'react'
-import i18next from '../services/i18next'
+import i18next from 'i18next'
 import { useState } from 'react'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Input from '../components/Input';
 import { useNavigation } from '@react-navigation/native';
 import * as Localization from "expo-localization";
+import { FIREBASE_AUTH } from '../FirebaseConfig';
+import { createUserWithEmailAndPassword, validatePassword } from 'firebase/auth';
+import ReactNativeModal from 'react-native-modal';
+
 
 const SignUpScreen: React.FC = () => {
 
+  const [loading, setLoading] = useState(false);  
   const [name, onChangeName] = useState('');
   const [email, onChangeEmail] = useState('');
   const [pw, onChangePw] = useState('');
@@ -22,6 +27,26 @@ const SignUpScreen: React.FC = () => {
   const [pwError, setPwError] = useState('');
   const [pwRepeatError, setPwRepeatError] = useState('');
 
+  const auth = FIREBASE_AUTH;
+  const signUp = async () => {
+    setLoading(true);
+    try {
+        const response = await createUserWithEmailAndPassword(auth, email, pw)
+        .catch(error => {
+            switch(error.code) {
+                case 'auth/email-already-in-use':
+                  setMailError(i18next.t('sign_up_mail_error_invalid'))
+                  break;
+            }
+            console.log(error)
+        })
+        .finally(() => setLoading(false))
+        console.log(response)
+     } catch (error) {
+        console.log(error)
+     } 
+  }
+    
 
   const onChangeDate = (event: any, selectedDate: any) => {
     {Platform.OS === 'android' && (
@@ -68,16 +93,19 @@ const SignUpScreen: React.FC = () => {
 
     if (pw.trim().length <= 5) {
         valid = false;
-        setPwError(i18next.t('sign_up_pw_error_characters'))
+        setPwError(i18next.t('sign_up_pw_error_characters'));
     }
 
     if (pw !== pwRepeat) {
         valid = false;
-        setPwRepeatError(i18next.t('sign_up_pw_repeat_error'))
+        setPwRepeatError(i18next.t('sign_up_pw_repeat_error'));
     }
 
+    console.log(valid) 
+
     if (valid) {
-        navigation.navigate('Login')
+        signUp();
+        
     }
 
   }
@@ -90,7 +118,7 @@ const SignUpScreen: React.FC = () => {
             <View style={styles.container_inner}>
                 <Image source={require('../assets/images/sign_up_3.png')} resizeMode='contain' style={styles.image} />
                 <Text style={styles.title}>{i18next.t('sign_up_title').toUpperCase()}</Text>
-                <Input placeholder={i18next.t('name')} error={nameError} onChange={onChangeName} setError={setNameError} value={name} password={false} />
+                <Input email={false} handleInputChange={() => {}} placeholder={i18next.t('name')} error={nameError} onChange={onChangeName} setError={setNameError} value={name} password={false} />
                 <View style={styles.container_input}>
                     <TouchableOpacity 
                     activeOpacity={1} 
@@ -140,9 +168,9 @@ const SignUpScreen: React.FC = () => {
                         )
                     )}
                 </View>
-                <Input placeholder={i18next.t('email')} error={mailError} onChange={onChangeEmail} setError={setMailError} value={email} password={false} />
-                <Input placeholder={i18next.t('password')} error={pwError} onChange={onChangePw} setError={setPwError} value={pw} password={true} />
-                <Input placeholder={i18next.t('password_repeat')} error={pwRepeatError} onChange={onChangePwRepeat} setError={setPwRepeatError} value={pwRepeat} password={true} />
+                <Input email={true} handleInputChange={() => {}} placeholder={i18next.t('email')} error={mailError} onChange={onChangeEmail} setError={setMailError} value={email} password={false} />
+                <Input email={false} handleInputChange={() => {}} placeholder={i18next.t('password')} error={pwError} onChange={onChangePw} setError={setPwError} value={pw} password={true} />
+                <Input email={false} handleInputChange={() => {}} placeholder={i18next.t('password_repeat')} error={pwRepeatError} onChange={onChangePwRepeat} setError={setPwRepeatError} value={pwRepeat} password={true} />
                 <TouchableOpacity activeOpacity={0.8} style={styles.button_signUp} onPress={validate}>
                     <Text style={{fontSize: 15, color: 'white', fontWeight: 'bold'}} >{i18next.t('sign_up').toUpperCase()}</Text>
                 </TouchableOpacity>
