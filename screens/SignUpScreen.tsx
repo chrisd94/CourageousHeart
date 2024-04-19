@@ -113,7 +113,7 @@ const SignUpScreen: React.FC = () => {
   const navigation = useNavigation();
 
   return (
-    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{backgroundColor: 'white', alignItems: 'center'}}>
+            <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{backgroundColor: 'white', alignItems: 'center'}}>
         <ScrollView keyboardShouldPersistTaps='always' showsVerticalScrollIndicator={false} contentContainerStyle={styles.container}>
             <View style={styles.container_inner}>
                 <Image source={require('../assets/images/sign_up_3.png')} resizeMode='contain' style={styles.image} />

@@ -1,6 +1,7 @@
 import React from 'react';
-import {View, TextInput, StyleSheet, TouchableOpacity, Image, Text} from 'react-native';
+import {View, TextInput, StyleSheet, TouchableOpacity, Image, Text, Dimensions} from 'react-native';
 import { useState } from 'react';
+import { ScaledSheet, scale } from 'react-native-size-matters';
 
 interface InputProps {
     placeholder: string,
@@ -32,7 +33,7 @@ const Input: React.FC<InputProps> = ({
   }
 
   return (
-    <View style={{marginBottom: 12}}>
+    <View style={{marginBottom: scale(12), width: '75%', alignItems: 'flex-start'}}>
       <View
         style={[
           style.inputContainer,
@@ -47,7 +48,7 @@ const Input: React.FC<InputProps> = ({
               ? 'red'
               : 'black',
             borderWidth: 
-              error.length !== 0
+              error.length !== 0 
               ? 2
               : 1
           }
@@ -75,7 +76,7 @@ const Input: React.FC<InputProps> = ({
         />
         {password && (
 
-        <TouchableOpacity style={{width: 44, height: 44, justifyContent: 'center', paddingLeft: 10}} activeOpacity={1} onPress={togglePassword}>
+        <TouchableOpacity style={{width: 44, height: 44, paddingLeft: 10, justifyContent: 'center'}} activeOpacity={1} onPress={togglePassword}>
             {hidePassword ? (
                 <Image source={require('../assets/icons/eye_crossed.png')} resizeMode='contain' style={{height: 20, width: 20, tintColor: '#374957'}} />
             ) : (
@@ -90,20 +91,20 @@ const Input: React.FC<InputProps> = ({
   );
 };
 
-const style = StyleSheet.create({
+const style = ScaledSheet.create({
   inputContainer: {
     height: 48,
     backgroundColor: 'white',
     flexDirection: 'row',
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     borderRadius: 50,
     borderColor: 'black',
     borderWidth: 1,
-    width: 300,
+    width: '100%',
   },
   inputField: {
     height: 48,
-    width: '90%'
+
   }
 });
 

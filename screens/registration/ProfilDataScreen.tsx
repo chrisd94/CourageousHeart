@@ -6,13 +6,14 @@ import { useState } from 'react'
 import * as Localization from "expo-localization"
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { useNavigation } from '@react-navigation/native'
+import { ScaledSheet, scale } from 'react-native-size-matters'
 
 
 const ProfilDataScreen: React.FC = () => {
 
   const [name, onChangeName] = useState('');
   const [nameError, setNameError] = useState('');
-  const [date, setDate] = useState(new Date());
+  const [dob, setDate] = useState(new Date());
   const [show, setShow] = useState(false);
   const [initial, setInitial] = useState(true);
   const [dobError, setDobError] = useState('');
@@ -30,7 +31,7 @@ const ProfilDataScreen: React.FC = () => {
 
 
   const checkInputs = () => {
-    if (name.trim().length != 0 && date) {
+    if (name.trim().length != 0 && dob) {
       setDisabled(false);
     } else {
       setDisabled(true);
@@ -76,7 +77,7 @@ const ProfilDataScreen: React.FC = () => {
     console.log(valid) 
 
     if (valid) {
-        navigation.navigate('TabNavigator')
+        navigation.navigate('SignUpAccount', {name: name, dob: dob.toLocaleDateString()})
     }
 
   };
@@ -89,10 +90,16 @@ const ProfilDataScreen: React.FC = () => {
                 <Text style={styles.title}>{i18next.t('sign_up_title').toUpperCase()}</Text>
             </View>
 
+            <View style={styles.container_picture}>
+                <View style={styles.container_image}>
+                    <Image source={require('../../assets/images/user_default.png')} resizeMode='contain' style={styles.profilPicture}/>
+                    <TouchableOpacity activeOpacity={1} style={styles.button_pen}>
+                        <Image source={require('../../assets/icons/pen_circle.png')} resizeMode='contain' style={{width: scale(27), height: scale(27),}}/>
+                    </TouchableOpacity>
+                </View>
+            </View>
+
             <View style={styles.container_form}>
-            <View style={{width: 110, marginBottom: 40}}>
-                        <Image source={require('../../assets/images/user_coloured.png')} resizeMode='contain' style={styles.profilPicture}/>
-                    </View>
                     <Input email={false} handleInputChange={handleNameChange} placeholder={i18next.t('name')} error={nameError} onChange={onChangeName} setError={setNameError} value={name} password={false} />
                     <View style={styles.container_input}>
                         <TouchableOpacity 
@@ -102,7 +109,7 @@ const ProfilDataScreen: React.FC = () => {
                             {initial ? (
                             <Text style={{ color: 'gray' }}>{i18next.t('dob')}</Text>
                             ) : (
-                            <Text style={{ color: 'black' }}>{date.toLocaleDateString()}</Text>
+                            <Text style={{ color: 'black' }}>{dob.toLocaleDateString()}</Text>
                             )}
                         </TouchableOpacity>
                         <Text style={{marginTop: 4, color: 'red', fontSize: 11}}>{dobError}</Text>
@@ -111,7 +118,7 @@ const ProfilDataScreen: React.FC = () => {
                                 <View style={{alignSelf: 'center'}}>
                                     <DateTimePicker
                                         display='spinner'
-                                        value={date}
+                                        value={dob}
                                         onChange={onChangeDate}
                                         maximumDate={new Date()}
                                     />
@@ -122,13 +129,13 @@ const ProfilDataScreen: React.FC = () => {
                                         <View style={styles.overlayContent}>
                                             <View style={{alignItems: 'flex-end', marginBottom: 10}}>
                                                 <TouchableOpacity style={{width: 30, height: 30}} activeOpacity={1} onPress={hideDatepicker}>
-                                                    <Image source={require('../../assets/icons/close.png')} resizeMode='contain' style={{height: 30, width: 30, tintColor: '#374957'}}/>
+                                                    <Image source={require('../../assets/icons/close.png')} resizeMode='contain' style={{height: scale(30), width: scale(30), tintColor: '#374957'}}/>
                                                 </TouchableOpacity>
                                             </View>
                                             <View style={{alignSelf: 'center'}}>
                                                 <DateTimePicker
                                                     display='spinner'
-                                                    value={date}
+                                                    value={dob}
                                                     onChange={onChangeDate}
                                                     maximumDate={new Date()}
                                                     locale={Localization.getLocales()[0].languageCode!}
@@ -143,13 +150,20 @@ const ProfilDataScreen: React.FC = () => {
                             )
                         )}
                     </View>
+
+                    <View style={{flex: 0.3, justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', alignSelf: 'center'}}>
+                        <Text>{i18next.t('already_account')}</Text>
+                    <Text style={{fontWeight: 'bold', marginLeft: 10}} onPress={() => {navigation.navigate('Login')}}>{i18next.t('login_title')}</Text>
+                </View>
             </View>
                 
             <View style={styles.container_button}>
-                <TouchableOpacity style={[styles.button_next, {backgroundColor: disabled ? 'gainsboro' : 'black'}]} disabled={disabled} activeOpacity={0.8} onPress={validate}>
-                    <Text style={{color: 'white', marginEnd: 8}}>{i18next.t('next').toUpperCase()}</Text>
-                    <Image source={require('../../assets/icons/angle_small_right.png')} resizeMode='contain' style={{height: 25, width: 25, tintColor: 'white'}}/>
-                </TouchableOpacity>
+                <View style={styles.container_next}>
+                    <TouchableOpacity style={styles.button_next} activeOpacity={0.8} onPress={validate}>
+                        <Text style={{color: 'white', marginEnd: 8, fontWeight: 'bold'}}>{i18next.t('next').toUpperCase()}</Text>
+                        <Image source={require('../../assets/icons/angle_small_right.png')} resizeMode='contain' style={{height: 25, width: 25, tintColor: 'white'}}/>
+                    </TouchableOpacity>
+                </View>
             </View>
         </View>
   )
@@ -157,40 +171,53 @@ const ProfilDataScreen: React.FC = () => {
 
 export default ProfilDataScreen
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
     container: {
         flex: 1,
+        justifyContent: 'flex-end',
         alignItems: 'center',
         backgroundColor: 'white',
-        paddingVertical: 40,
+        paddingVertical: '35@s'
     },
     container_title: {
-        flex: 0.7,
-        marginTop: 20,
-        marginBottom: 35,
+        flex: 0.4,
+        justifyContent: 'center'
+    },
+    container_picture: {
+        flex: 0.65,
+        width: '100%',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+        paddingBottom: '20@s'
+    },
+    container_image: {
+        height: '130@s'
     },
     container_form: {
-        flex: 2,
-        justifyContent: 'center',
+        flex: 0.8,
         alignItems: 'center',
+        justifyContent: 'center',
+        width: '100%'
     },
     container_input: {
-        width: 300,
-        marginBottom: 12,
+        width: '75%',
+        marginBottom: '12@s',
         alignItems: 'flex-start',
         flexDirection: 'column'
     },
     container_button: {
-        flex: 1,
-        flexDirection: 'row-reverse',
-        alignSelf: 'flex-end',
-        width: 155,
-        borderColor: 'black',
-        borderWidth: 1
+        flex: 0.3,
+        justifyContent: 'flex-end',
+        alignItems: 'flex-end',
+        width: '75%'
+    },
+    container_next: {
+        width: '115@s',
+        height: 48
     },
     title: {
         color: 'black',
-        fontSize: 40,
+        fontSize: '40@s',
         fontWeight: 'bold',
     },
     topImage: {
@@ -199,20 +226,19 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     profilPicture: {
-        height: 130,
-        width: 130,
+        height: '125@s',
+        width: '125@s',
         borderRadius: 80,
-        borderColor: 'black',
-        borderWidth: 1,
         alignSelf: 'center',
         justifyContent: 'center',
         alignItems: 'center',
+        tintColor: '#ECDEEA'
     },
     datePicker: {
         justifyContent: 'center',
-        paddingLeft: 20,
-        paddingRight: 20,
-        borderRadius: 50,
+        paddingLeft: '20@s',
+        paddingRight: '20@s',
+        borderRadius: '40@s',
         height: 48,
         width: '100%',
     },
@@ -224,10 +250,21 @@ const styles = StyleSheet.create({
     },
     overlayContent: {
         backgroundColor: 'white',
-        padding: 20,
-        borderRadius: 20,
+        padding: '20@s',
+        borderRadius: '20@s',
         width: '90%',
         justifyContent: 'center'
+    },
+    button_pen: {
+        width: '33@s',
+        height: '33@s',
+        alignSelf: 'flex-end',
+        top: '-33@s',
+        backgroundColor: 'white',
+        borderRadius: 50,
+        borderColor: 'white',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     button_ok: {
         alignSelf: 'center',
@@ -237,8 +274,8 @@ const styles = StyleSheet.create({
         borderColor: 'black',
         borderWidth: 1,
         height: 48,
-        width: 120,
-        marginTop: 10 
+        width: '120@s',
+        marginTop: '10@s' 
     },
     button_next: {
         flex: 1,
@@ -246,8 +283,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 50,
-        height: 48,
+        width: 130,
         alignSelf: 'flex-end',
-        marginEnd: 40
+        backgroundColor: 'black'
     },
 });

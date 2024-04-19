@@ -9,13 +9,21 @@ import { SafeAreaView, StyleSheet } from "react-native";
 import i18next from "i18next";
 import * as Localization from "expo-localization";
 import ProfilDataScreen from "./screens/registration/ProfilDataScreen";
+import AccountDataScreen from "./screens/registration/AccountDataScreen";
+import { useEffect, useState } from "react";
+import { User, onAuthStateChanged } from "firebase/auth";
+import { FIREBASE_AUTH } from "./FirebaseConfig";
+import InitialStack from "./components/InitialStack";
 
 type RootStackParamList = {
   Landing: undefined;
   Home: undefined;
   Login: undefined;
+  SignUpProfil: undefined;
+  SignUpAccount: undefined;
+  TabNavigator: undefined;
   SignUp: undefined;
-  TabNavigator: undefined
+  InitialStack: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -25,14 +33,24 @@ i18next.changeLanguage(Localization.getLocales()[0].languageCode!)
 
 
 export default function App() {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    onAuthStateChanged(FIREBASE_AUTH, (user) => {
+      console.log('user', user);
+      setUser(user);
+    });
+  }, [])
+
   return (
     <SafeAreaView style={styles.safeContainer}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Landing" screenOptions={{ headerShown: false, animation: 'none'}}>
-          <Stack.Screen name="Landing" component={LandingScreen} />
-          <Stack.Screen name="Login" component={LoginScreen}/>
-          <Stack.Screen name="SignUp" component={ProfilDataScreen} />
-          <Stack.Screen name="TabNavigator" component={TabNavigator} />
+        <Stack.Navigator initialRouteName="InitialStack" screenOptions={{ headerShown: false, animation: 'none'}}>
+          {!user ? (
+              <Stack.Screen name="InitialStack" component={InitialStack}/>
+          ) : (
+              <Stack.Screen name="TabNavigator" component={TabNavigator}/>
+          )}
         </Stack.Navigator>
         <StatusBar hidden={true}/>
       </NavigationContainer>

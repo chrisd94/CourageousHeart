@@ -1,7 +1,8 @@
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native'
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Dimensions } from 'react-native'
 import React from 'react'
 import i18next from '../services/i18next'
 import { useNavigation } from '@react-navigation/native' 
+import { ScaledSheet, scale } from 'react-native-size-matters'
 
 
 const LandingScreen: React.FC = () => {
@@ -10,45 +11,66 @@ const LandingScreen: React.FC = () => {
 
   return (
     <View style={styles.container_outer}>
-        <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.container}>
-            <Text style={styles.title}>{i18next.t("welcome").toUpperCase()}</Text>
-            <Text style={{ textAlign: 'center', marginTop: 35, marginBottom: 35}}>{i18next.t("welcome_text")}</Text>
+        <View style={styles.container_title}>
+            <Text style={styles.title}>{i18next.t('welcome').toUpperCase()}</Text>
+        </View>
+
+        <View style={styles.container_description}>
+            <Text style={{textAlign: 'center', fontSize: scale(12)}}>{i18next.t('welcome_text')}</Text>
+        </View>
+
+        <View style={styles.container_image}>
             <Image source={require('../assets/images/sign_up_1.png')} resizeMode='contain' style={styles.image}/>
+        </View>
+
+        <View style={styles.container_buttons}>
             <TouchableOpacity activeOpacity={0.8} style={styles.button} onPress={() => {navigation.navigate('Login')}}>
-                <Text style={{fontSize: 15, color: 'white', fontWeight: 'bold'}} >{i18next.t("login").toUpperCase()}</Text>
+                <Text style={{fontSize: 15, color: 'white', fontWeight: 'bold'}} >{i18next.t("login_title").toUpperCase()}</Text>
             </TouchableOpacity>
-            <TouchableOpacity activeOpacity={0.8} style={styles.button} onPress={() => {navigation.navigate('SignUp')}}>
+            <TouchableOpacity activeOpacity={0.8} style={styles.button} onPress={() => {navigation.navigate('SignUpProfil')}}>
                 <Text style={{fontSize: 15, color: 'white', fontWeight: 'bold'}} >{i18next.t("sign_up").toUpperCase()}</Text>
             </TouchableOpacity>
-        </ScrollView>
+        </View>
     </View>
   )
 }
 
 export default LandingScreen
 
-const styles = StyleSheet.create({
+const styles = ScaledSheet.create({
     container_outer: {
         flex: 1,
+        justifyContent: 'space-between',
         backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'space-evenly',
+        padding: '35@s',
     },
-    container: {
-        flexGrow: 1,
-        justifyContent: 'center',
-        backgroundColor: '#fff',
+    container_title: {
         alignItems: 'center',
-        padding: 30,
+        flex: 0.5,
+        justifyContent: 'flex-start'
+    },
+    container_description: {
+        alignItems: 'center',
+        flex: 0.8
+    },
+    container_image: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        flex: 2
+    },
+    container_buttons: {
+        alignItems: 'center',
+        flex: 1, 
+        justifyContent: 'flex-end'
     },
     title: {
         color: '#AF8FEA',
-        fontSize: 45,
+        fontSize: '40@s',
         fontWeight: 'bold',
     },
     image: {
-        width: 250,
-        height: 250
+        width: '200@s',
+        height: '200@s'
     },
     button: {
         justifyContent: 'center',
@@ -57,6 +79,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#C6B1ED',
         height: 48,
         width: 180,
-        marginTop: 25 
+        marginTop: '25@s' 
     }
 });
