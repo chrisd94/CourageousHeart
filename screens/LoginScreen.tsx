@@ -114,6 +114,7 @@ const styles = ScaledSheet.create({
     },
     container_title: {
       flex: 0.6, 
+      justifyContent: 'flex-start',
       width: '100%'
     },
     container_form: {
