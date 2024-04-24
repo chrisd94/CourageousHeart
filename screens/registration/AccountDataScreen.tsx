@@ -6,42 +6,46 @@ import { useState } from 'react'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import { ScaledSheet, scale } from 'react-native-size-matters'
 import { FIREBASE_AUTH } from '../../FirebaseConfig'
-import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { UserCredential, createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth'
 
 type AccountDataScreenParams = {
     name : string;
     dob: string;
+    imgUrl: string;
   };
 
 
 const AccountDataScreen: React.FC = () => {
 
   const route = useRoute<RouteProp<{ params: AccountDataScreenParams }, 'params'>>();  
-  const { name, dob } = route.params;
+  const { name, dob, imgUrl } = route.params;
   const [email, onChangeEmail] = useState('');
   const [pw, onChangePw] = useState('');
   const [pwRepeat, onChangePwRepeat] = useState('');
   const [mailError, setMailError] = useState('');
   const [pwError, setPwError] = useState('');
   const [pwRepeatError, setPwRepeatError] = useState('');
-
+  let inUse = false;
+  
   const auth = FIREBASE_AUTH;
   const signUp = async () => {
     try {
-        const response = await createUserWithEmailAndPassword(auth, email, pw)
+        await createUserWithEmailAndPassword(auth, email, pw)
+        .then((userCredential) => {
+            sendEmailVerification(userCredential.user)
+        })
         .catch(error => {
             switch(error.code) {
                 case 'auth/email-already-in-use':
-                  setMailError(i18next.t('sign_up_mail_error_invalid'))
+                  setMailError(i18next.t('sign_up_mail_already_in_use'))
+                  inUse = true;              
                   break;
             }
-            console.log(error)
         })
-        .finally()
-        console.log(response)
+
      } catch (error) {
         console.log(error)
-     } 
+     }
   }
 
   const validate = () => {
@@ -68,8 +72,13 @@ const AccountDataScreen: React.FC = () => {
     console.log(valid) 
 
     if (valid) {
-        signUp();
-        navigation.navigate('Login');
+        signUp()
+        .then(() => {
+            if (!inUse) {
+                auth.signOut()
+                navigation.navigate('Login')
+            }
+        })
     }
 
   };
@@ -89,7 +98,7 @@ const AccountDataScreen: React.FC = () => {
 
                 <View style={{justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', alignSelf: 'center'}}>
                     <Text>{i18next.t('already_account')}</Text>
-                    <Text style={{fontWeight: 'bold', marginLeft: 10}} onPress={() => {navigation.navigate('SignUp')}}>{i18next.t('login_title')}</Text>
+                    <Text style={{fontWeight: 'bold', marginLeft: 10}} onPress={() => {navigation.navigate('Login')}}>{i18next.t('login_title')}</Text>
                 </View>
             </KeyboardAvoidingView>
                 

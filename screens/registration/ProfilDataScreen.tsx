@@ -7,6 +7,8 @@ import * as Localization from "expo-localization"
 import DateTimePicker from '@react-native-community/datetimepicker'
 import { useNavigation } from '@react-navigation/native'
 import { ScaledSheet, scale } from 'react-native-size-matters'
+import * as ImagePicker from 'expo-image-picker';
+
 
 
 const ProfilDataScreen: React.FC = () => {
@@ -18,6 +20,31 @@ const ProfilDataScreen: React.FC = () => {
   const [initial, setInitial] = useState(true);
   const [dobError, setDobError] = useState('');
   const [disabled, setDisabled] = useState(true);  
+  const [image, setImage] = useState('');
+
+
+  const pickImage = async () => {
+    let response = await ImagePicker.requestMediaLibraryPermissionsAsync(false)
+    if (!response.granted) {
+        return
+    }
+
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+      console.log('UrI: ', image)
+    }
+  };
+  
 
 
   const onChangeDate = (event: any, selectedDate: any) => {
@@ -77,7 +104,7 @@ const ProfilDataScreen: React.FC = () => {
     console.log(valid) 
 
     if (valid) {
-        navigation.navigate('SignUpAccount', {name: name, dob: dob.toLocaleDateString()})
+        navigation.navigate('SignUpAccount', {name: name, dob: dob.toLocaleDateString(), imgUrl: image})
     }
 
   };
@@ -92,8 +119,12 @@ const ProfilDataScreen: React.FC = () => {
 
             <View style={styles.container_picture}>
                 <View style={styles.container_image}>
-                    <Image source={require('../../assets/images/user_default.png')} resizeMode='contain' style={styles.profilPicture}/>
-                    <TouchableOpacity activeOpacity={1} style={styles.button_pen}>
+                    {image.length == 0 ? (
+                        <Image source={require('../../assets/images/user_default.png')} resizeMode='contain' style={styles.defaultProfilPicture}/>
+                    ) : (
+                        <Image source={{uri: image}} resizeMode='contain' style={styles.profilPicture}/>
+                    )}
+                    <TouchableOpacity activeOpacity={1} style={styles.button_pen} onPress={pickImage}>
                         <Image source={require('../../assets/icons/pen_circle.png')} resizeMode='contain' style={{width: scale(27), height: scale(27),}}/>
                     </TouchableOpacity>
                 </View>
@@ -225,14 +256,26 @@ const styles = ScaledSheet.create({
         height: 180,
         alignSelf: 'center'
     },
-    profilPicture: {
+    defaultProfilPicture: {
         height: '125@s',
         width: '125@s',
-        borderRadius: 80,
+        borderRadius: '80@s',
+        borderWidth: 2,
+        borderColor: 'black',
         alignSelf: 'center',
         justifyContent: 'center',
         alignItems: 'center',
         tintColor: '#ECDEEA'
+    },
+    profilPicture: {
+        height: '125@s',
+        width: '125@s',
+        borderRadius: '80@s',
+        borderWidth: 2,
+        borderColor: 'black',
+        alignSelf: 'center',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     datePicker: {
         justifyContent: 'center',

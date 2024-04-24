@@ -37,7 +37,7 @@ const LoginScreen: React.FC = () => {
         console.log(response)
      } catch (error) {
         console.log(error)
-     } 
+     }
   }
 
   const validate = () => {
@@ -68,17 +68,20 @@ const LoginScreen: React.FC = () => {
       <View style={{backgroundColor: 'white', alignItems: 'center', flex: 1}}>
         <View style={styles.container}>
 
-          <View style={styles.container_image}>
-            <Image source={require('../assets/images/sign_up_3.png')} resizeMode='contain' style={styles.image} />
-          </View>
-
           <View style={styles.container_title}>
             <Text style={styles.title}>{i18next.t('login_title').toUpperCase()}</Text>
           </View>
 
+          <View style={styles.container_image}>
+            <Image source={require('../assets/images/sign_up_3.png')} resizeMode='contain' style={styles.image} />
+          </View>
+          
           <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.container_form}>
-            <Input email={true} handleInputChange={() => {}} error={mailError} placeholder={i18next.t('email')} onChange={onChangeEmail} setError={setPwError} value={email} password={false} />
+            <Input email={true} handleInputChange={() => {}} error={mailError} placeholder={i18next.t('email')} onChange={onChangeEmail} setError={setMailError} value={email} password={false} />
             <Input email={false} handleInputChange={() => {}} error={pwError} placeholder={i18next.t('password')} onChange={onChangePw} setError={setPwError} value={pw} password={true} />
+            <View>
+              <Text style={{fontWeight: 'bold', marginBottom: 30}} onPress={() => {navigation.navigate('SignUpProfil')}}>{i18next.t('password_forgot')}</Text>
+            </View>
             <View style={{justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', alignSelf: 'center'}}>
               <Text>{i18next.t('no_account')}</Text>
               <Text style={{fontWeight: 'bold', marginLeft: 10}} onPress={() => {navigation.navigate('SignUpProfil')}}>{i18next.t('sign_up')}</Text>
@@ -101,25 +104,26 @@ const styles = ScaledSheet.create({
       flex: 1,
       backgroundColor: 'white',
       height: '100%',
-      marginVertical: '30@s',
+      marginBottom: '30@s',
+      marginTop: '50@s',
       width: Dimensions.get('window').width,
       justifyContent: 'center',
       alignItems: 'center'
     },
     container_image: {
-      justifyContent: 'flex-start',
+      justifyContent: 'center',
       flex: 1, 
       width: '100%', 
       height: scale(180)
     },
     container_title: {
-      flex: 0.6, 
+      flex: 0.4, 
       justifyContent: 'flex-start',
       width: '100%'
     },
     container_form: {
       flex: 1,
-      justifyContent: 'flex-start',
+      justifyContent: 'center',
       alignItems: 'center',
       width: '100%'
     },
@@ -130,7 +134,8 @@ const styles = ScaledSheet.create({
     image: {
       width: '163@s',
       height: '160@s',
-      alignSelf: 'center'
+      alignSelf: 'center',
+      marginBottom: 30
     },
     title: {
       color: 'black',

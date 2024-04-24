@@ -1,15 +1,10 @@
 import { NavigationContainer } from "@react-navigation/native";
 import TabNavigator from './navigation/TabNavigator';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import LoginScreen from "./screens/LoginScreen";
-import LandingScreen from "./screens/LandingScreen";
-import SignUpScreen from "./screens/SignUpScreen";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView, StyleSheet } from "react-native";
 import i18next from "i18next";
 import * as Localization from "expo-localization";
-import ProfilDataScreen from "./screens/registration/ProfilDataScreen";
-import AccountDataScreen from "./screens/registration/AccountDataScreen";
 import { useEffect, useState } from "react";
 import { User, onAuthStateChanged } from "firebase/auth";
 import { FIREBASE_AUTH } from "./FirebaseConfig";
@@ -37,8 +32,12 @@ export default function App() {
 
   useEffect(() => {
     onAuthStateChanged(FIREBASE_AUTH, (user) => {
-      console.log('user', user);
-      setUser(user);
+      if (user) {
+        console.log('user', user);
+        if (user.emailVerified) {
+          setUser(user)
+        }
+      }
     });
   }, [])
 
