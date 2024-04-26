@@ -70,13 +70,14 @@ const Input: React.FC<InputProps> = ({
             {
             width:
                 password
-              ? '90%'
+              ? '88%'
               : '100%',
             }]}
         />
         {password && (
 
-        <TouchableOpacity style={{width: 44, height: 44, paddingLeft: 10, justifyContent: 'center'}} activeOpacity={1} onPress={togglePassword}>
+        <TouchableOpacity style={{width: 44, height: 44, paddingLeft: 10, justifyContent: 'center'
+      }} activeOpacity={1} onPress={togglePassword}>
             {hidePassword ? (
                 <Image source={require('../assets/icons/eye_crossed.png')} resizeMode='contain' style={{height: 20, width: 20, tintColor: '#374957'}} />
             ) : (
@@ -100,11 +101,10 @@ const style = ScaledSheet.create({
     borderRadius: 50,
     borderColor: 'black',
     borderWidth: 1,
-    width: '100%',
+    width: '100%'
   },
   inputField: {
-    height: 48,
-
+    height: 48
   }
 });
 

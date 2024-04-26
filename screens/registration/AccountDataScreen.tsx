@@ -5,14 +5,19 @@ import Input from '../../components/Input'
 import { useState } from 'react'
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native'
 import { ScaledSheet, scale } from 'react-native-size-matters'
-import { FIREBASE_AUTH } from '../../FirebaseConfig'
-import { UserCredential, createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth'
+import { FIREBASE_AUTH, FIREBASE_STORAGE } from '../../FirebaseConfig'
+import { UserCredential, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from 'firebase/auth'
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 
 type AccountDataScreenParams = {
     name : string;
     dob: string;
     imgUrl: string;
-  };
+};
+
+interface UserData {
+    photoURL: string;
+}
 
 
 const AccountDataScreen: React.FC = () => {
@@ -28,11 +33,19 @@ const AccountDataScreen: React.FC = () => {
   let inUse = false;
   
   const auth = FIREBASE_AUTH;
+  const storage = FIREBASE_STORAGE;
+
   const signUp = async () => {
     try {
         await createUserWithEmailAndPassword(auth, email, pw)
-        .then((userCredential) => {
-            sendEmailVerification(userCredential.user)
+        .then(async (userCredential) => {
+            await sendEmailVerification(userCredential.user)
+
+            /* await uploadImageAsync(imgUrl) */
+            /* .then(async (storageUri) => {
+                await updateProfile(userCredential.user, {photoURL: storageUri})
+                console.log('USER_URL', userCredential.user.photoURL)
+            }) */
         })
         .catch(error => {
             switch(error.code) {
@@ -43,10 +56,25 @@ const AccountDataScreen: React.FC = () => {
             }
         })
 
+        
+
      } catch (error) {
         console.log(error)
-     }
+    }
   }
+
+  /* const uploadImageAsync = async (uri: string) => {
+
+    const response = await fetch(uri);
+    const blob = await response.blob();
+    
+    let date = new Date().toLocaleTimeString()
+    const storageRef = ref(storage, '/images/profil/' + date + '.png');
+    console.log('--------------------------------------------------------------------------------------------------', uri)
+    const result = await uploadBytes(storageRef, blob)
+
+    return await getDownloadURL(storageRef);
+  } */
 
   const validate = () => {
     let valid = true;

@@ -33,7 +33,7 @@ const ProfilDataScreen: React.FC = () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [1, 1],
       quality: 1,
     });
 
@@ -41,7 +41,6 @@ const ProfilDataScreen: React.FC = () => {
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
-      console.log('UrI: ', image)
     }
   };
   
