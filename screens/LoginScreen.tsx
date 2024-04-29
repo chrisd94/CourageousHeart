@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {StyleSheet, View, Text, KeyboardAvoidingView, Platform, Image, TouchableOpacity, Dimensions, ScrollView} from "react-native"
 import { useState } from "react"
-import { useNavigation } from "@react-navigation/native"
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import i18next from "i18next"
 import Input from "../components/Input"
 import { FIREBASE_APP, FIREBASE_AUTH } from "../FirebaseConfig";
@@ -10,6 +10,12 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 
 const LoginScreen: React.FC = () => {
 
+  type AccountDataScreenParams = {
+    afterCreation : boolean;
+  };
+
+  const route = useRoute<RouteProp<{ params: AccountDataScreenParams }, 'params'>>();  
+  const { afterCreation } = route.params;
   const [email, onChangeEmail] = useState('');
   const [pw, onChangePw] = useState('');
   const [pwError, setPwError] = useState('');
@@ -64,6 +70,7 @@ const LoginScreen: React.FC = () => {
 
   };
 
+  
     return(
       <View style={{backgroundColor: 'white', alignItems: 'center', flex: 1}}>
         <View style={styles.container}>

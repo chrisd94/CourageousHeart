@@ -15,11 +15,6 @@ type AccountDataScreenParams = {
     imgUrl: string;
 };
 
-interface UserData {
-    photoURL: string;
-}
-
-
 const AccountDataScreen: React.FC = () => {
 
   const route = useRoute<RouteProp<{ params: AccountDataScreenParams }, 'params'>>();  
@@ -41,11 +36,15 @@ const AccountDataScreen: React.FC = () => {
         .then(async (userCredential) => {
             await sendEmailVerification(userCredential.user)
 
-            /* await uploadImageAsync(imgUrl) */
-            /* .then(async (storageUri) => {
+            await uploadImageAsync(imgUrl)
+            .then(async (storageUri) => {
                 await updateProfile(userCredential.user, {photoURL: storageUri})
-                console.log('USER_URL', userCredential.user.photoURL)
-            }) */
+            })
+            .finally(async () => {
+                await updateProfile(userCredential.user, {displayName: name})
+                console.log('UPDATED USER', userCredential.user)
+            }) 
+        
         })
         .catch(error => {
             switch(error.code) {
@@ -63,18 +62,22 @@ const AccountDataScreen: React.FC = () => {
     }
   }
 
-  /* const uploadImageAsync = async (uri: string) => {
+  const uploadImageAsync = async (uri: string) => {
 
     const response = await fetch(uri);
     const blob = await response.blob();
     
-    let date = new Date().toLocaleTimeString()
-    const storageRef = ref(storage, '/images/profil/' + date + '.png');
-    console.log('--------------------------------------------------------------------------------------------------', uri)
-    const result = await uploadBytes(storageRef, blob)
+    let date = new Date().getTime().toString()
+    const storageRef = ref(storage, '/images/profil/' + date + 'not_verified.png');
+    await uploadBytes(storageRef, blob)
+    .catch(error => {
+        console.log('ERROR', error.code)
+    })
 
-    return await getDownloadURL(storageRef);
-  } */
+    const url = await getDownloadURL(storageRef)
+
+    return url
+  } 
 
   const validate = () => {
     let valid = true;
@@ -104,7 +107,7 @@ const AccountDataScreen: React.FC = () => {
         .then(() => {
             if (!inUse) {
                 auth.signOut()
-                navigation.navigate('Login')
+                navigation.navigate('Login', {afterCreation: true})
             }
         })
     }
@@ -126,7 +129,7 @@ const AccountDataScreen: React.FC = () => {
 
                 <View style={{justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', alignSelf: 'center'}}>
                     <Text>{i18next.t('already_account')}</Text>
-                    <Text style={{fontWeight: 'bold', marginLeft: 10}} onPress={() => {navigation.navigate('Login')}}>{i18next.t('login_title')}</Text>
+                    <Text style={{fontWeight: 'bold', marginLeft: 10}} onPress={() => {navigation.navigate('Login', {afterCreation: false})}}>{i18next.t('login_title')}</Text>
                 </View>
             </KeyboardAvoidingView>
                 

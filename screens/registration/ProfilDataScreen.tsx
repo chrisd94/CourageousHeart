@@ -183,7 +183,7 @@ const ProfilDataScreen: React.FC = () => {
 
                     <View style={{flex: 0.3, justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', alignSelf: 'center'}}>
                         <Text>{i18next.t('already_account')}</Text>
-                    <Text style={{fontWeight: 'bold', marginLeft: 10}} onPress={() => {navigation.navigate('Login')}}>{i18next.t('login_title')}</Text>
+                    <Text style={{fontWeight: 'bold', marginLeft: 10}} onPress={() => {navigation.navigate('Login', {afterCreation: false})}}>{i18next.t('login_title')}</Text>
                 </View>
             </View>
                 

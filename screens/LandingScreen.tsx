@@ -24,7 +24,7 @@ const LandingScreen: React.FC = () => {
         </View>
 
         <View style={styles.container_buttons}>
-            <TouchableOpacity activeOpacity={0.8} style={styles.button} onPress={() => {navigation.navigate('Login')}}>
+            <TouchableOpacity activeOpacity={0.8} style={styles.button} onPress={() => {navigation.navigate('Login', {afterCreation: false})}}>
                 <Text style={{fontSize: 15, color: 'white', fontWeight: 'bold'}} >{i18next.t("login_title").toUpperCase()}</Text>
             </TouchableOpacity>
             <TouchableOpacity activeOpacity={0.8} style={styles.button} onPress={() => {navigation.navigate('SignUpProfil')}}>
