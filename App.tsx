@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { User, onAuthStateChanged } from "firebase/auth";
 import { FIREBASE_AUTH } from "./FirebaseConfig";
 import InitialStack from "./components/InitialStack";
+import { RootSiblingParent } from 'react-native-root-siblings';
 
 type RootStackParamList = {
   Landing: undefined;
@@ -19,6 +20,7 @@ type RootStackParamList = {
   TabNavigator: undefined;
   SignUp: undefined;
   InitialStack: undefined;
+  ForgotPassword: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -42,18 +44,20 @@ export default function App() {
   }, [])
 
   return (
-    <SafeAreaView style={styles.safeContainer}>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="InitialStack" screenOptions={{ headerShown: false, animation: 'none'}}>
-          {!user ? (
+    <RootSiblingParent>
+      <SafeAreaView style={styles.safeContainer}>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="InitialStack" screenOptions={{ headerShown: false, animation: 'none'}}>
+            {!user ? (
               <Stack.Screen name="InitialStack" component={InitialStack}/>
-          ) : (
+            ) : (
               <Stack.Screen name="TabNavigator" component={TabNavigator}/>
-          )}
-        </Stack.Navigator>
-        <StatusBar hidden={true}/>
-      </NavigationContainer>
-    </SafeAreaView>
+            )}
+          </Stack.Navigator>
+          <StatusBar hidden={true}/>
+        </NavigationContainer>
+      </SafeAreaView>
+    </RootSiblingParent>
   );
 }
 

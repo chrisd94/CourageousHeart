@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import {StyleSheet, View, Text, KeyboardAvoidingView, Platform, Image, TouchableOpacity, Dimensions, ScrollView} from "react-native"
+import {StyleSheet, View, Text, KeyboardAvoidingView, Platform, Image, TouchableOpacity, Dimensions, ScrollView, ActivityIndicator} from "react-native"
 import { useState } from "react"
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native"
 import i18next from "i18next"
@@ -7,6 +7,7 @@ import Input from "../components/Input"
 import { FIREBASE_APP, FIREBASE_AUTH } from "../FirebaseConfig";
 import { ScaledSheet, scale } from "react-native-size-matters";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import Toast from "react-native-root-toast";
 
 const LoginScreen: React.FC = () => {
 
@@ -44,6 +45,7 @@ const LoginScreen: React.FC = () => {
      } catch (error) {
         console.log(error)
      }
+    setLoading(false)
   }
 
   const validate = () => {
@@ -71,8 +73,21 @@ const LoginScreen: React.FC = () => {
   };
 
   
+  useEffect(() => {
+    if (afterCreation) {
+        Toast.show(i18next.t('check_inbox'), {
+        duration: 6000,
+        position: Toast.positions.TOP,
+        opacity: 1
+      });
+    }
+  }, [])
+  
     return(
       <View style={{backgroundColor: 'white', alignItems: 'center', flex: 1}}>
+        <TouchableOpacity activeOpacity={0.8} style={styles.button_back} onPress={() => navigation.goBack()}>
+            <Image source={require('../assets/icons/angle_left.png')} style={{height: scale(25), width: scale(25)}} resizeMode='contain'/>
+        </TouchableOpacity>
         <View style={styles.container}>
 
           <View style={styles.container_title}>
@@ -97,7 +112,11 @@ const LoginScreen: React.FC = () => {
 
           <View style={styles.container_button}>
             <TouchableOpacity activeOpacity={0.8} style={styles.button_login} onPress={() => {validate()}}>
-              <Text style={{fontSize: 15, color: 'white', fontWeight: 'bold'}} >{i18next.t('login_action').toUpperCase()}</Text>
+                {loading ? 
+                  <ActivityIndicator size='small' color='white'/>
+                      :                     
+                  <Text style={{fontSize: 15, color: 'white', fontWeight: 'bold'}} >{i18next.t('login_action').toUpperCase()}</Text>                
+                }
             </TouchableOpacity>
           </View>    
 
@@ -111,8 +130,7 @@ const styles = ScaledSheet.create({
       flex: 1,
       backgroundColor: 'white',
       height: '100%',
-      marginBottom: '30@s',
-      marginTop: '50@s',
+      marginBottom: '35@s',
       width: Dimensions.get('window').width,
       justifyContent: 'center',
       alignItems: 'center'
@@ -135,12 +153,14 @@ const styles = ScaledSheet.create({
       width: '100%'
     },
     container_button: {
+      paddingHorizontal: '35@s',
+      width: '100%',
       flexGrow: 0.2,
       justifyContent: 'flex-end'
     },
     image: {
-      width: '163@s',
-      height: '160@s',
+      width: '140@s',
+      height: '140@s',
       alignSelf: 'center',
       marginBottom: 30
     },
@@ -150,13 +170,20 @@ const styles = ScaledSheet.create({
       fontWeight: 'bold',
       alignSelf: 'center'
     },
+    button_back: {
+      width: '30@s', 
+      height: '30@s', 
+      marginTop: '30@s', 
+      marginLeft: '15@s',
+      alignSelf: 'flex-start'
+    },
     button_login: {
       alignSelf: 'center',
       justifyContent: 'center',
       alignItems: 'center',
       borderRadius: 50,
       height: 48,
-      width: 150,
+      width: '100%',
       marginTop: 10,
       backgroundColor: 'black'
     },

@@ -33,11 +33,15 @@ const Input: React.FC<InputProps> = ({
   }
 
   return (
-    <View style={{marginBottom: scale(12), width: '75%', alignItems: 'flex-start'}}>
+    <View style={{paddingHorizontal: scale(35), marginBottom: scale(12),  width: '100%', alignItems: 'flex-start'}}>
       <View
         style={[
           style.inputContainer,
           {
+            paddingRight: 
+                password
+              ? 48
+              : 10,
             backgroundColor:
                 isFocused
               ? '#ECDEEA'
@@ -66,18 +70,11 @@ const Input: React.FC<InputProps> = ({
           }}
           onBlur={() => setIsFocused(false)}
           secureTextEntry={hidePassword}
-          style={[style.inputField,
-            {
-            width:
-                password
-              ? '88%'
-              : '100%',
-            }]}
+          style={style.inputField}
         />
         {password && (
 
-        <TouchableOpacity style={{width: 44, height: 44, paddingLeft: 10, justifyContent: 'center'
-      }} activeOpacity={1} onPress={togglePassword}>
+        <TouchableOpacity style={{width: 44, height: 44, paddingLeft: 10, justifyContent: 'center'}} activeOpacity={1} onPress={togglePassword}>
             {hidePassword ? (
                 <Image source={require('../assets/icons/eye_crossed.png')} resizeMode='contain' style={{height: 20, width: 20, tintColor: '#374957'}} />
             ) : (
@@ -97,14 +94,15 @@ const style = ScaledSheet.create({
     height: 48,
     backgroundColor: 'white',
     flexDirection: 'row',
-    paddingHorizontal: 15,
+    paddingLeft: 20,
     borderRadius: 50,
     borderColor: 'black',
     borderWidth: 1,
     width: '100%'
   },
   inputField: {
-    height: 48
+    height: 48,
+    width: '100%'
   }
 });
 

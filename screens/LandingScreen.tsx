@@ -42,7 +42,8 @@ const styles = ScaledSheet.create({
         flex: 1,
         justifyContent: 'space-between',
         backgroundColor: '#fff',
-        padding: '35@s',
+        paddingVertical: '35@s',
+        width: '100%'
     },
     container_title: {
         alignItems: 'center',
@@ -50,6 +51,7 @@ const styles = ScaledSheet.create({
         justifyContent: 'flex-start'
     },
     container_description: {
+        paddingHorizontal: '35@s',
         alignItems: 'center',
         flex: 0.8
     },
@@ -59,9 +61,11 @@ const styles = ScaledSheet.create({
         flex: 2
     },
     container_buttons: {
+        paddingHorizontal: '35@s',
         alignItems: 'center',
         flex: 1, 
-        justifyContent: 'flex-end'
+        justifyContent: 'flex-end',
+        width: '100%'
     },
     title: {
         color: '#AF8FEA',
@@ -78,7 +82,7 @@ const styles = ScaledSheet.create({
         borderRadius: 50,
         backgroundColor: '#C6B1ED',
         height: 48,
-        width: 180,
+        width: '100%',
         marginTop: '25@s' 
     }
 });

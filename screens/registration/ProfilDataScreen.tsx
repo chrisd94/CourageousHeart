@@ -31,14 +31,13 @@ const ProfilDataScreen: React.FC = () => {
 
     // No permissions request is necessary for launching the image library
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [1, 1],
       quality: 1,
     });
 
     console.log(result);
-
     if (!result.canceled) {
       setImage(result.assets[0].uri);
     }
@@ -112,19 +111,26 @@ const ProfilDataScreen: React.FC = () => {
 
   return (
         <View style={styles.container}>
+            <TouchableOpacity activeOpacity={0.8} style={styles.button_back} onPress={() => navigation.goBack()}>
+                <Image source={require('../../assets/icons/angle_left.png')} style={{height: scale(25), width: scale(25)}} resizeMode='contain'/>
+            </TouchableOpacity>
             <View style={styles.container_title}>
                 <Text style={styles.title}>{i18next.t('sign_up_title').toUpperCase()}</Text>
             </View>
 
             <View style={styles.container_picture}>
-                <View style={styles.container_image}>
+                <View style={[styles.container_image, {top: image.length != 0 ? -scale(33) : 0}]}>
+                    {image.length != 0 && (
+                        <TouchableOpacity activeOpacity={1} style={styles.button_trash} onPress={() => setImage('')}>
+                            <Image source={require('../../assets/icons/trash.png')} tintColor={'white'} resizeMode='contain' style={{width: scale(16), height: scale(16)}}/>
+                        </TouchableOpacity>                    )}
                     {image.length == 0 ? (
-                        <Image source={require('../../assets/images/user_default.png')} resizeMode='contain' style={styles.defaultProfilPicture}/>
+                        <Image source={require('../../assets/images/user_default.png')} resizeMode='contain' style={styles.default_profilPicture}/>
                     ) : (
                         <Image source={{uri: image}} resizeMode='contain' style={styles.profilPicture}/>
                     )}
                     <TouchableOpacity activeOpacity={1} style={styles.button_pen} onPress={pickImage}>
-                        <Image source={require('../../assets/icons/pen_circle.png')} resizeMode='contain' style={{width: scale(27), height: scale(27),}}/>
+                        <Image source={require('../../assets/icons/pen_circle.png')} resizeMode='contain' style={{width: scale(27), height: scale(27)}}/>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -154,14 +160,9 @@ const ProfilDataScreen: React.FC = () => {
                                     />
                                 </View>
                             ) : (
-                                <Modal animationType='fade' transparent={true}>
-                                    <View style={styles.overlay}>
+                                <Modal animationType='slide' transparent={true}>
+                                    <TouchableOpacity activeOpacity={1} onPress={hideDatepicker} style={styles.overlay}>
                                         <View style={styles.overlayContent}>
-                                            <View style={{alignItems: 'flex-end', marginBottom: 10}}>
-                                                <TouchableOpacity style={{width: 30, height: 30}} activeOpacity={1} onPress={hideDatepicker}>
-                                                    <Image source={require('../../assets/icons/close.png')} resizeMode='contain' style={{height: scale(30), width: scale(30), tintColor: '#374957'}}/>
-                                                </TouchableOpacity>
-                                            </View>
                                             <View style={{alignSelf: 'center'}}>
                                                 <DateTimePicker
                                                     display='spinner'
@@ -175,16 +176,16 @@ const ProfilDataScreen: React.FC = () => {
                                                 <Text style={{fontSize: 15, color: 'black', fontWeight: 'bold'}} >{i18next.t('ok').toUpperCase()}</Text>
                                             </TouchableOpacity>
                                         </View>
-                                    </View>
+                                    </TouchableOpacity>
                                 </Modal>
                             )
                         )}
                     </View>
 
-                    <View style={{flex: 0.3, justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', alignSelf: 'center'}}>
+                    <View style={{flex: 0.3, justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', alignSelf: 'center', paddingTop: scale(15)}}>
                         <Text>{i18next.t('already_account')}</Text>
-                    <Text style={{fontWeight: 'bold', marginLeft: 10}} onPress={() => {navigation.navigate('Login', {afterCreation: false})}}>{i18next.t('login_title')}</Text>
-                </View>
+                        <Text style={{fontWeight: 'bold', marginLeft: 10}} onPress={() => {navigation.navigate('Login', {afterCreation: false})}}>{i18next.t('login_title')}</Text>
+                    </View>
             </View>
                 
             <View style={styles.container_button}>
@@ -207,14 +208,15 @@ const styles = ScaledSheet.create({
         justifyContent: 'flex-end',
         alignItems: 'center',
         backgroundColor: 'white',
-        paddingVertical: '35@s'
+        paddingBottom: '35@s'
     },
     container_title: {
         flex: 0.4,
-        justifyContent: 'center'
+        justifyContent: 'flex-start',
+        paddingTop: '10@s'
     },
     container_picture: {
-        flex: 0.65,
+        flex: 0.55,
         width: '100%',
         justifyContent: 'flex-end',
         alignItems: 'center',
@@ -224,13 +226,14 @@ const styles = ScaledSheet.create({
         height: '130@s'
     },
     container_form: {
-        flex: 0.8,
+        flex: 0.95,
         alignItems: 'center',
         justifyContent: 'center',
         width: '100%'
     },
     container_input: {
-        width: '75%',
+        width: '100%',
+        paddingHorizontal: '35@s',
         marginBottom: '12@s',
         alignItems: 'flex-start',
         flexDirection: 'column'
@@ -239,7 +242,8 @@ const styles = ScaledSheet.create({
         flex: 0.3,
         justifyContent: 'flex-end',
         alignItems: 'flex-end',
-        width: '75%'
+        width: '100%',
+        paddingHorizontal: '35@s',
     },
     container_next: {
         width: '115@s',
@@ -255,7 +259,7 @@ const styles = ScaledSheet.create({
         height: 180,
         alignSelf: 'center'
     },
-    defaultProfilPicture: {
+    default_profilPicture: {
         height: '125@s',
         width: '125@s',
         borderRadius: '80@s',
@@ -275,27 +279,33 @@ const styles = ScaledSheet.create({
         alignSelf: 'center',
         justifyContent: 'center',
         alignItems: 'center',
+        zIndex: 2
     },
     datePicker: {
         justifyContent: 'center',
-        paddingLeft: '20@s',
-        paddingRight: '20@s',
+        paddingLeft: 20,
         borderRadius: '40@s',
         height: 48,
         width: '100%',
     },
     overlay: {
         flex: 1,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        justifyContent: 'center',
-        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0)',
+        justifyContent: 'flex-end',
     },
     overlayContent: {
-        backgroundColor: 'white',
+        backgroundColor: 'lightgrey',
         padding: '20@s',
-        borderRadius: '20@s',
-        width: '90%',
+        borderTopStartRadius: '20@s',
+        borderTopEndRadius: '20@s',
         justifyContent: 'center'
+    },
+    button_back: {
+        width: '30@s', 
+        height: '30@s', 
+        marginTop: '30@s', 
+        marginLeft: '15@s',
+        alignSelf: 'flex-start'
     },
     button_pen: {
         width: '33@s',
@@ -304,9 +314,22 @@ const styles = ScaledSheet.create({
         top: '-33@s',
         backgroundColor: 'white',
         borderRadius: 50,
-        borderColor: 'white',
         justifyContent: 'center',
         alignItems: 'center',
+        zIndex: 2
+    },
+    button_trash: {
+        width: '33@s',
+        height: '33@s',
+        alignSelf: 'flex-end',
+        top: '33@s',
+        borderRadius: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'black',
+        borderColor: 'white',
+        borderWidth: '3@s',
+        zIndex: 3
     },
     button_ok: {
         alignSelf: 'center',

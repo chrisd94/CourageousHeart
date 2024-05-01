@@ -1,4 +1,4 @@
-import { View, Text, KeyboardAvoidingView, Platform, StyleSheet, Dimensions, Image, TouchableOpacity, Modal, ScrollView } from 'react-native'
+import { View, Text, KeyboardAvoidingView, Platform, StyleSheet, Dimensions, Image, TouchableOpacity, Modal, ScrollView, ActivityIndicator } from 'react-native'
 import React from 'react'
 import i18next from 'i18next'
 import Input from '../../components/Input'
@@ -25,12 +25,15 @@ const AccountDataScreen: React.FC = () => {
   const [mailError, setMailError] = useState('');
   const [pwError, setPwError] = useState('');
   const [pwRepeatError, setPwRepeatError] = useState('');
+  const [loading, setLoading] = useState(false);
+
   let inUse = false;
   
   const auth = FIREBASE_AUTH;
   const storage = FIREBASE_STORAGE;
 
   const signUp = async () => {
+    setLoading(true)
     try {
         await createUserWithEmailAndPassword(auth, email, pw)
         .then(async (userCredential) => {
@@ -47,19 +50,18 @@ const AccountDataScreen: React.FC = () => {
         
         })
         .catch(error => {
+            console.log(error.code)
             switch(error.code) {
                 case 'auth/email-already-in-use':
                   setMailError(i18next.t('sign_up_mail_already_in_use'))
-                  inUse = true;              
+                  inUse = true;     
+                  console.log('ERROR', inUse)         
                   break;
             }
         })
-
-        
-
      } catch (error) {
-        console.log(error)
     }
+    setLoading(false)
   }
 
   const uploadImageAsync = async (uri: string) => {
@@ -105,6 +107,7 @@ const AccountDataScreen: React.FC = () => {
     if (valid) {
         signUp()
         .then(() => {
+            console.log('ERROR after', inUse)         
             if (!inUse) {
                 auth.signOut()
                 navigation.navigate('Login', {afterCreation: true})
@@ -118,6 +121,9 @@ const AccountDataScreen: React.FC = () => {
 
   return (
         <View style={styles.container}>
+            <TouchableOpacity activeOpacity={0.8} style={styles.button_back} onPress={() => navigation.goBack()}>
+                <Image source={require('../../assets/icons/angle_left.png')} style={{height: scale(25), width: scale(25)}} resizeMode='contain'/>
+            </TouchableOpacity>
             <View style={styles.container_title}>
                 <Text style={styles.title}>{i18next.t('sign_up_title').toUpperCase()}</Text>
             </View>
@@ -127,7 +133,7 @@ const AccountDataScreen: React.FC = () => {
                 <Input email={false} handleInputChange={() => {}} placeholder={i18next.t('password')} error={pwError} onChange={onChangePw} setError={setPwError} value={pw} password={true} />
                 <Input email={false} handleInputChange={() => {}} placeholder={i18next.t('password_repeat')} error={pwRepeatError} onChange={onChangePwRepeat} setError={setPwRepeatError} value={pwRepeat} password={true} />                    
 
-                <View style={{justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', alignSelf: 'center'}}>
+                <View style={{justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', alignSelf: 'center', paddingTop: scale(15)}}>
                     <Text>{i18next.t('already_account')}</Text>
                     <Text style={{fontWeight: 'bold', marginLeft: 10}} onPress={() => {navigation.navigate('Login', {afterCreation: false})}}>{i18next.t('login_title')}</Text>
                 </View>
@@ -135,7 +141,11 @@ const AccountDataScreen: React.FC = () => {
                 
             <View style={styles.container_button}>
                 <TouchableOpacity activeOpacity={0.8} style={styles.button_signUp} onPress={validate}>
-                    <Text style={{fontSize: 15, color: 'white', fontWeight: 'bold'}} >{i18next.t('sign_up').toUpperCase()}</Text>
+                    {loading ? 
+                        <ActivityIndicator size='small' color='white'/>
+                        :                     
+                        <Text style={{fontSize: 15, color: 'white', fontWeight: 'bold'}} >{i18next.t('sign_up').toUpperCase()}</Text>
+                    }
                 </TouchableOpacity>
             </View>
         </View>
@@ -150,12 +160,12 @@ const styles = ScaledSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: 'white',
-        marginVertical: '35@s',
+        marginBottom: '35@s'
     },
     container_title: {
         flexGrow: 0.4,
         justifyContent: 'flex-start',
-        paddingTop: '25@s'
+        paddingTop: '10@s'
     },
     container_form: {
         flexGrow: 0.4,
@@ -167,6 +177,8 @@ const styles = ScaledSheet.create({
     container_button: {
         flexGrow: 0.2,
         justifyContent: 'flex-end',
+        paddingHorizontal: '35@s',
+        width: '100%'
     },
     title: {
         color: 'black',
@@ -178,13 +190,20 @@ const styles = ScaledSheet.create({
         height: 180,
         alignSelf: 'center'
     },
+    button_back: {
+        width: '30@s', 
+        height: '30@s', 
+        marginTop: '30@s', 
+        marginLeft: '15@s',
+        alignSelf: 'flex-start'
+    },
     button_signUp: {
         alignSelf: 'center',
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 50,
         height: 48,
-        width: 180,
+        width: '100%',
         backgroundColor: 'black'
     },
 });
