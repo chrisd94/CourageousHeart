@@ -122,7 +122,7 @@ const AccountDataScreen: React.FC = () => {
   return (
         <View style={styles.container}>
             <TouchableOpacity activeOpacity={0.8} style={styles.button_back} onPress={() => navigation.goBack()}>
-                <Image source={require('../../assets/icons/angle_left.png')} style={{height: scale(25), width: scale(25)}} resizeMode='contain'/>
+                <Image source={require('../../assets/icons/angle_left.png')} style={{height: scale(20), width: scale(20)}} resizeMode='contain'/>
             </TouchableOpacity>
             <View style={styles.container_title}>
                 <Text style={styles.title}>{i18next.t('sign_up_title').toUpperCase()}</Text>
@@ -177,7 +177,7 @@ const styles = ScaledSheet.create({
     container_button: {
         flexGrow: 0.2,
         justifyContent: 'flex-end',
-        paddingHorizontal: '35@s',
+        paddingHorizontal: '20@s',
         width: '100%'
     },
     title: {

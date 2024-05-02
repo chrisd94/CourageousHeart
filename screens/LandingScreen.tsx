@@ -51,7 +51,7 @@ const styles = ScaledSheet.create({
         justifyContent: 'flex-start'
     },
     container_description: {
-        paddingHorizontal: '35@s',
+        paddingHorizontal: '20@s',
         alignItems: 'center',
         flex: 0.8
     },
@@ -61,7 +61,7 @@ const styles = ScaledSheet.create({
         flex: 2
     },
     container_buttons: {
-        paddingHorizontal: '35@s',
+        paddingHorizontal: '20@s',
         alignItems: 'center',
         flex: 1, 
         justifyContent: 'flex-end',

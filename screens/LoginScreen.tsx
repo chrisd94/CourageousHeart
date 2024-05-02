@@ -6,7 +6,7 @@ import i18next from "i18next"
 import Input from "../components/Input"
 import { FIREBASE_APP, FIREBASE_AUTH } from "../FirebaseConfig";
 import { ScaledSheet, scale } from "react-native-size-matters";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { sendPasswordResetEmail, signInWithEmailAndPassword } from "firebase/auth";
 import Toast from "react-native-root-toast";
 
 const LoginScreen: React.FC = () => {
@@ -48,6 +48,30 @@ const LoginScreen: React.FC = () => {
     setLoading(false)
   }
 
+  const forgotPassword = async () => {
+    if (email.trim().length != 0) {
+      console.log(email)
+      await sendPasswordResetEmail(auth, email)
+      .then(() => {
+        Toast.show(i18next.t('reset_password'), {
+          duration: 6000,
+          position: Toast.positions.TOP,
+          opacity: 1
+        });
+      })
+      .catch(error => {
+        switch(error.code) {
+          case 'auth/user-not-found':
+            setMailError(i18next.t('sign_up_mail_error_invalid'));
+            break;
+        }
+        console.log(error)
+      })
+    } else {
+        setMailError(i18next.t('reset_password_mail_empty'))
+    } 
+  }
+
   const validate = () => {
     let valid = true;
 
@@ -71,7 +95,6 @@ const LoginScreen: React.FC = () => {
     }
 
   };
-
   
   useEffect(() => {
     if (afterCreation) {
@@ -86,7 +109,7 @@ const LoginScreen: React.FC = () => {
     return(
       <View style={{backgroundColor: 'white', alignItems: 'center', flex: 1}}>
         <TouchableOpacity activeOpacity={0.8} style={styles.button_back} onPress={() => navigation.goBack()}>
-            <Image source={require('../assets/icons/angle_left.png')} style={{height: scale(25), width: scale(25)}} resizeMode='contain'/>
+            <Image source={require('../assets/icons/angle_left.png')} style={{height: scale(20), width: scale(20)}} resizeMode='contain'/>
         </TouchableOpacity>
         <View style={styles.container}>
 
@@ -102,11 +125,11 @@ const LoginScreen: React.FC = () => {
             <Input email={true} handleInputChange={() => {}} error={mailError} placeholder={i18next.t('email')} onChange={onChangeEmail} setError={setMailError} value={email} password={false} />
             <Input email={false} handleInputChange={() => {}} error={pwError} placeholder={i18next.t('password')} onChange={onChangePw} setError={setPwError} value={pw} password={true} />
             <View>
-              <Text style={{fontWeight: 'bold', marginBottom: 30}} onPress={() => {navigation.navigate('SignUpProfil')}}>{i18next.t('password_forgot')}</Text>
+              <Text style={{fontWeight: 'bold', marginBottom: 30}} onPress={() => {forgotPassword()}}>{i18next.t('password_forgot')}</Text>
             </View>
             <View style={{justifyContent: 'space-evenly', alignItems: 'center', flexDirection: 'row', alignSelf: 'center'}}>
               <Text>{i18next.t('no_account')}</Text>
-              <Text style={{fontWeight: 'bold', marginLeft: 10}} onPress={() => {navigation.navigate('SignUpProfil')}}>{i18next.t('sign_up')}</Text>
+              <Text style={{fontWeight: 'bold', marginLeft: scale(10)}} onPress={() => {navigation.navigate('SignUpProfil')}}>{i18next.t('sign_up')}</Text>
             </View>
           </KeyboardAvoidingView>
 
@@ -153,7 +176,7 @@ const styles = ScaledSheet.create({
       width: '100%'
     },
     container_button: {
-      paddingHorizontal: '35@s',
+      paddingHorizontal: '20@s',
       width: '100%',
       flexGrow: 0.2,
       justifyContent: 'flex-end'
@@ -186,7 +209,7 @@ const styles = ScaledSheet.create({
       width: '100%',
       marginTop: 10,
       backgroundColor: 'black'
-    },
+    }
   });
 
 export default LoginScreen

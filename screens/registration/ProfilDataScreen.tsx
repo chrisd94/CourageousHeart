@@ -112,7 +112,7 @@ const ProfilDataScreen: React.FC = () => {
   return (
         <View style={styles.container}>
             <TouchableOpacity activeOpacity={0.8} style={styles.button_back} onPress={() => navigation.goBack()}>
-                <Image source={require('../../assets/icons/angle_left.png')} style={{height: scale(25), width: scale(25)}} resizeMode='contain'/>
+                <Image source={require('../../assets/icons/angle_left.png')} style={{height: scale(20), width: scale(20)}} resizeMode='contain'/>
             </TouchableOpacity>
             <View style={styles.container_title}>
                 <Text style={styles.title}>{i18next.t('sign_up_title').toUpperCase()}</Text>
@@ -233,7 +233,7 @@ const styles = ScaledSheet.create({
     },
     container_input: {
         width: '100%',
-        paddingHorizontal: '35@s',
+        paddingHorizontal: '20@s',
         marginBottom: '12@s',
         alignItems: 'flex-start',
         flexDirection: 'column'
@@ -243,7 +243,7 @@ const styles = ScaledSheet.create({
         justifyContent: 'flex-end',
         alignItems: 'flex-end',
         width: '100%',
-        paddingHorizontal: '35@s',
+        paddingHorizontal: '20@s',
     },
     container_next: {
         width: '115@s',

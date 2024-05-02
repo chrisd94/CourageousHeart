@@ -27,6 +27,8 @@
     "login_pw_empty": "Please type in your password",
     "login_failed": "Wrong password or email address",
     "next": "Next",
-    "check_inbox": "We have sent you a confirmation e-mail. Verify your account and get started!"
+    "check_inbox": "Check your inbox to verify your account and get started!",
+    "reset_password": "Check your inbos to reset your password",
+    "reset_password_mail_empty": "We need your email address to send you the reset email"
 }
 

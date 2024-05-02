@@ -27,5 +27,7 @@
     "login_pw_empty": "Bitte gib ein Passwort ein",
     "login_failed": "Passwort oder E-Mail Adresse falsch",
     "next": "Weiter",
-    "check_inbox": "Wir haben dir eine Bestätigungs E-Mail geschickt. Verifiziere dein Konto und leg los!"
+    "check_inbox": "Wir haben dir eine Bestätigungs E-Mail geschickt. Verifiziere dein Konto und leg los!",
+    "reset_password": "Wir haben dir eine E-Mail zur Rücksetzung deines Passworts geschickt",
+    "reset_password_mail_empty": "Wir brauchen deine E-Mail Adresse, damit wir dir eine Rücksetzungs E-Mail schicken können"
 }

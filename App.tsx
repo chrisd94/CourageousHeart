@@ -20,7 +20,6 @@ type RootStackParamList = {
   TabNavigator: undefined;
   SignUp: undefined;
   InitialStack: undefined;
-  ForgotPassword: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();

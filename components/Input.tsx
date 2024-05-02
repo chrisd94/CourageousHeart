@@ -33,7 +33,7 @@ const Input: React.FC<InputProps> = ({
   }
 
   return (
-    <View style={{paddingHorizontal: scale(35), marginBottom: scale(12),  width: '100%', alignItems: 'flex-start'}}>
+    <View style={{paddingHorizontal: scale(20), marginBottom: scale(12),  width: '100%', alignItems: 'flex-start'}}>
       <View
         style={[
           style.inputContainer,
